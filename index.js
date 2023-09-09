@@ -1,19 +1,22 @@
-require('dotenv').config();
-var mysql = require('mysql2');
-var connection = mysql.createConnection({
-    host:process.env.DB_HOST,
-    user:process.env.DB_USERNAME,
-    password:process.env.DB_PASSWORD,
-    database:process.env.DB_DATABASE
-})
+const fs = require('fs');
+const {parse} = require('csv');
+const {connect2db} = require("./db")
+const filepath = "cdr.log.20230818_10.csv"
 
-connection.connect(function(err) {
-    if (err) {
-        console.log("error connecting to database: "+err.stack)
-        return;
-    }
+// connect2db
 
-    console.log(`connected to ${process.env.DB_DATABASE} database`);
-    return
-});
+fs.createReadStream(filepath)
+    .pipe(parse({delimiter:"|", from_line:1}))
+    .on("data", function(row) {
+        console.log(row);
+    })
+    .on("end", function() {
+        console.log("finished");
+    })
+    .on("error", function (error) {
+        console.log(error.message);
+    })
+
+
+
 
