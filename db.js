@@ -9,25 +9,24 @@ var connection = mysql.createConnection({
     database:process.env.DB_DATABASE
 })
 
-let connect2db = connection.connect(function(err) {
-    if (err) {
-        console.log("error connecting to database: "+err.stack)
-        return;
-    }
+// let connect2db = connection.connect(function(err) {
+//     if (err) {
+//         console.log("error connecting to database: "+err.stack)
+//         return;
+//     }
 
-    console.log(`connected to ${process.env.DB_DATABASE} database`);
+//     console.log(`connected to ${process.env.DB_DATABASE} database`);
 
-    //Perform all database operations here.
+//     //Perform all database operations here.
     
-    connection.end((error)=> {
-        if (error) {
-            console.log("Error closing connection:",error);
-            return
-        }
-
-        console.log("MySQL connection closed");
-    });
-});
+//     connection.end((error)=> {
+//         if (error) {
+//             console.log("Error closing connection:",error);
+//             return
+//         }
+//         console.log("MySQL connection closed");
+//     });
+// });
 
 // export {connect2db}
-module.exports = {connect2db}
+module.exports = {connection}
