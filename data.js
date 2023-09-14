@@ -233,5 +233,37 @@
 //   // Close the connection
 //   connection.end();
 // });
+require('dotenv').config();
+const mysql = require('mysql2');
+
+// Create a MySQL connection
+var connection = mysql.createConnection({
+  host:process.env.DB_HOST,
+  user:process.env.DB_USERNAME,
+  password:process.env.DB_PASSWORD,
+  database:process.env.DB_DATABASE
+})
+
+// Define the parameters
+const id = 1;
+const firstName = 'ebe';
+const age = '';
+
+// Define the SQL query using NULLIF and placeholders
+const query = 'INSERT INTO example (id, name, age) VALUES (NULLIF(?, ?), NULLIF(?, ?), NULLIF(?, ?))';
+
+// Execute the query with parameters
+connection.execute(query, [id, '', firstName, '', age, ''], (error, results, fields) => {
+  if (error) {
+    console.error('Error executing the query:', error);
+    return;
+  }
+
+  console.log('Insert successful.');
+
+  // Close the connection
+  connection.end();
+});
+
 
 

@@ -1,1 +1,2 @@
-9
+Successful entries:48
+Failed entries:0
