@@ -233,37 +233,124 @@
 //   // Close the connection
 //   connection.end();
 // });
-require('dotenv').config();
-const mysql = require('mysql2');
+// require('dotenv').config();
+// const mysql = require('mysql2');
 
-// Create a MySQL connection
-var connection = mysql.createConnection({
-  host:process.env.DB_HOST,
-  user:process.env.DB_USERNAME,
-  password:process.env.DB_PASSWORD,
-  database:process.env.DB_DATABASE
-})
+// // Create a MySQL connection
+// var connection = mysql.createConnection({
+//   host:process.env.DB_HOST,
+//   user:process.env.DB_USERNAME,
+//   password:process.env.DB_PASSWORD,
+//   database:process.env.DB_DATABASE
+// })
 
-// Define the parameters
-const id = 1;
-const firstName = 'ebe';
-const age = '';
+// // Define the parameters
+// const id = 1;
+// const firstName = 'ebe';
+// const age = '';
 
-// Define the SQL query using NULLIF and placeholders
-const query = 'INSERT INTO example (id, name, age) VALUES (NULLIF(?, ?), NULLIF(?, ?), NULLIF(?, ?))';
+// // Define the SQL query using NULLIF and placeholders
+// const query = 'INSERT INTO example (id, name, age) VALUES (NULLIF(?, ?), NULLIF(?, ?), NULLIF(?, ?))';
 
-// Execute the query with parameters
-connection.execute(query, [id, '', firstName, '', age, ''], (error, results, fields) => {
-  if (error) {
-    console.error('Error executing the query:', error);
-    return;
-  }
+// // Execute the query with parameters
+// connection.execute(query, [id, '', firstName, '', age, ''], (error, results, fields) => {
+//   if (error) {
+//     console.error('Error executing the query:', error);
+//     return;
+//   }
 
-  console.log('Insert successful.');
+//   console.log('Insert successful.');
 
-  // Close the connection
-  connection.end();
+//   // Close the connection
+//   connection.end();
+// });
+
+// require('dotenv').config();
+// const fs = require('fs');
+// const mysql = require('mysql2');
+
+// // Create a MySQL connection
+// var connection = mysql.createConnection({
+//   host:process.env.DB_HOST,
+//   user:process.env.DB_USERNAME,
+//   password:process.env.DB_PASSWORD,
+//   database:process.env.DB_DATABASE
+// })
+
+// // Define your INSERT query
+// const query = 'INSERT INTO example (id, name, age) VALUES (NULLIF(?, ?), NULLIF(?, ?), NULLIF(?, ?))';
+
+// // Create a readable stream from a file
+// const readableStream = fs.createReadStream('cdrlogs.csv', 'utf8');
+
+// // Initialize counters for successful and failed insertions
+// let successfulInsertions = 0;
+// let failedInsertions = 0;
+
+// // Handle data events (data chunks read from the file)
+// readableStream.on('data', (chunk) => {
+//   // Split the data into rows (assuming each line is a row)
+//   const rows = chunk.split('\n');
+
+//   // Process each row and insert it into the database
+//   // rows.forEach((row) => {
+//   //   const values = row.split('|');
+
+//     // Execute the INSERT query with the row's values
+//     connection.query(query, rows, (error, result) => {
+//       if (error) {
+//         console.error('Error executing the query:', error);
+//         failedInsertions++;
+//       } else {
+//         successfulInsertions++;
+//       }
+//     });
+//   });
+
+// // Handle the 'end' event (when the entire file has been read)
+// readableStream.on('end', () => {
+//   console.log('Read stream finished.');
+//   console.log(`Successful insertions: ${successfulInsertions}`);
+//   console.log(`Failed insertions: ${failedInsertions}`);
+
+//   // Close the MySQL connection
+//   connection.end();
+// });
+
+// // Handle errors
+// readableStream.on('error', (err) => {
+//   console.error('Error reading the file:', err);
+// });
+
+
+const chokidar = require("chokidar");
+const { path } = require("express/lib/application");
+// const { watchOptions } = require("nodemon/lib/config/defaults");
+
+
+const watcher = chokidar.watch("data",{
+  ignored: /(^|[\/\\])\../,
+  persistent:true
 });
+
+watcher.on("ready", ()=> console.log("Ready to watch files"));
+
+// watcher.on("add",path => console.log(`Directory ${path}  has been added to`));
+watcher.on("add", (path) => {
+  console.log(`${path}`)
+  console.log(path);
+  if(path.endsWith(".csv")) {
+    console.log(`I will use you:`,path);
+  } else {
+    console.log("wrong file format");
+  }
+});
+
+watcher.on("error", (error) => {
+  console.error(`Chokidar error: ${error.message}`)
+});
+
+
 
 
 
