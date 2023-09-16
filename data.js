@@ -323,32 +323,34 @@
 // });
 
 
-const chokidar = require("chokidar");
-const { path } = require("express/lib/application");
-// const { watchOptions } = require("nodemon/lib/config/defaults");
+// const chokidar = require("chokidar");
+// const { path } = require("express/lib/application");
+// // const { watchOptions } = require("nodemon/lib/config/defaults");
 
 
-const watcher = chokidar.watch("data",{
-  ignored: /(^|[\/\\])\../,
-  persistent:true
-});
+// const watcher = chokidar.watch("data",{
+//   ignored: /(^|[\/\\])\../,
+//   persistent:true
+// });
 
-watcher.on("ready", ()=> console.log("Ready to watch files"));
+// watcher.on("ready", ()=> console.log("Ready to watch files"));
 
-// watcher.on("add",path => console.log(`Directory ${path}  has been added to`));
-watcher.on("add", (path) => {
-  console.log(`${path}`)
-  console.log(path);
-  if(path.endsWith(".csv")) {
-    console.log(`I will use you:`,path);
-  } else {
-    console.log("wrong file format");
-  }
-});
+// // watcher.on("add",path => console.log(`Directory ${path}  has been added to`));
+// watcher.on("add", (path) => {
+//   console.log(`${path}`)
+//   console.log(path);
+//   if(path.endsWith(".csv")) {
+//     console.log(`I will use you:`,path);
+//   } else {
+//     console.log("wrong file format");
+//   }
+// });
 
-watcher.on("error", (error) => {
-  console.error(`Chokidar error: ${error.message}`)
-});
+// watcher.on("error", (error) => {
+//   console.error(`Chokidar error: ${error.message}`)
+// });
+
+
 
 
 

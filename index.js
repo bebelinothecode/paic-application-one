@@ -4,8 +4,6 @@ const {connection} = require("./db");
 const { error } = require('console');
 const chokidar = require("chokidar");
 const path = require('path');
-// require('mysql/lib/protocol/constants/types');
-// const filepath = "cdr.log.20230818_10.csv"
 let successRecords = 0
 let failedRecords = 0
 let insertquery = `INSERT INTO call_detail_records(
@@ -19,22 +17,29 @@ let insertquery = `INSERT INTO call_detail_records(
     ,NULLIF(?,?),NULLIF(?,?),NULLIF(?,?),NULLIF(?,?))`;
 
 
+ //Connect to database   
 connection.connect(function(err) {
     if (err) {
-        console.log("error connecting to database: "+err.stack)
+        console.log("error connecting to database: "+err.message)
         return;
     }
     
-    console.log(`connected to ${process.env.DB_DATABASE} database`);
-    
-        //Perform all database operations here.
-        
-   
+    console.log(`connected to ${process.env.DB_DATABASE} database`);        
 });
 
-// connect2db
+    const watcher = chokidar.watch("data",{
+        ignored: /(^|[\/\\])\../,
+        persistent:true,   
+    });
 
-  fs.createReadStream(filepath)
+    watcher.on("ready", ()=> console.log("Ready to watch files"));
+
+    //watch data folder persistently for any .csv file additions
+    watcher.on("add", (path) => {
+        if(path.includes("cdr.log")&&path.endsWith(".csv")) {
+          console.log("I will use you");
+
+    fs.createReadStream(path)
     .pipe(parse({delimiter:"|", from_line:1}))
     .on("data", function(row) {
         connection.query(insertquery, [row[0]," ",row[1]," ",row[2]," ",row[3]," ",row[4]," ",row[5]," ",row[6]," ",row[7]," ",row[8]," ",row[9]," ",
@@ -44,8 +49,8 @@ connection.connect(function(err) {
                 throw err
             } else {
                 // console.log(result.affectedRows);
-                // successRecords++
-                    successRecords += result.affectedRows;
+                successRecords++;
+                    // successRecords += result.affectedRows;
             
             }
             // for (let index = 0; index < row.length; index++) {
@@ -56,9 +61,10 @@ connection.connect(function(err) {
     })
     .on("end", function() {
         console.log("finished");
-        console.log("Successful entries:",successRecords);
+        // console.log("Successful entries:",successRecords);
         // console.log("Failed records:",failedRecords);
-        const content = `Successful entries:${successRecords}\nFailed entries:${failedRecords}`;
+        const content = `Name of the file:${path}\nSuccessful entries:${successRecords}\nFailed entries:${failedRecords}`;
+        console.log(content);
 
 
         connection.end((error)=> {
@@ -85,22 +91,7 @@ connection.connect(function(err) {
     .on("finish",function() {
         console.log("Successful entries:",successRecords);
     });
-
-    // bebelino
-
-    const watcher = chokidar.watch("data",{
-        ignored: /(^|[\/\\])\../,
-        persistent:true
-    });
-
-    watcher.on("ready", ()=> console.log("Ready to watch files"));
-
-
-    watcher.on("add", (path) => {
-        if(path.endsWith(".csv")) {
-          console.log("I will use you");
-        //   let dickson = bebelino(path);
-        //   dickson
+        
         } else {
           console.log("wrong file format");
         }

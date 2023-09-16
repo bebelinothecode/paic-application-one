@@ -1,2 +1,3 @@
-Successful entries:57
+Name of the file:data/cdr.log.20230818_10.csv
+Successful entries:52
 Failed entries:0
