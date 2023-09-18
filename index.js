@@ -67,14 +67,14 @@ connection.connect(function(err) {
         console.log(content);
 
 
-        connection.end((error)=> {
-            if (error) {
-                console.log("Error closing connection:",error);
-                return
-            }
-            console.log("MySQL connection closed");
-            return
-        });
+        // connection.end((error)=> {
+        //     if (error) {
+        //         console.log("Error closing connection:",error);
+        //         return
+        //     }
+        //     console.log("MySQL connection closed");
+        //     return
+        // });
 
         fs.writeFile("cdrlogs.txt",content,"utf8",function(err) {
             if(err) {
